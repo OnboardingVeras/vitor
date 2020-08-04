@@ -2,6 +2,7 @@
 import Koa from 'koa';
 import Router from 'koa-router';
 import getPort from 'get-port';
+import asyncRetry from 'async-retry';
 import hello from './handlers/hello';
 
 class Server {
@@ -25,17 +26,26 @@ class Server {
     }
 
     public async startServer() {
-      await this.setPort();
-      await this.setRoutes();
+      await asyncRetry(async (bail) => {
+        try {
+          await this.setPort();
+          await this.setRoutes();
 
-      this.app.use(this.router.routes());
+          this.app.use(this.router.routes());
 
-      const server = this.app.listen(this.port, async () => {
-        console.log(`Server listening on port: ${this.port}`);
-      }).on('error', (err) => {
-        console.error(err);
-      });
-      return server;
+          const server = this.app.listen(this.port, async () => {
+            console.log(`Server listening on port: ${this.port} @ http://localhost:${this.port}`);
+          }).on('error', (err) => {
+            console.error(err);
+          });
+
+          return server;
+        } catch (error) {
+          console.debug(`Server failed to start on port:${this.port}. Reason: ${error.message}.`);
+          if (error.code !== 'EADDRINUSE') return bail(error);
+          return error;
+        }
+      }, { retries: 2, maxTimeout: 50, minTimeout: 50 });
     }
 }
 
