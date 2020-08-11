@@ -3,11 +3,6 @@ import Server from '../modules/server';
 
 const server = new Server();
 
-afterAll((done) => {
-  server.close();
-  done();
-});
-
 it('test GET method in \'/hello\' endpoint', async () => {
   server.startServer();
 
@@ -15,4 +10,13 @@ it('test GET method in \'/hello\' endpoint', async () => {
 
   expect(response.status).toBe(200);
   expect(response.body.message).toBe('funcionando');
+
+  server.closeServer();
+});
+
+test('test if server works', async () => {
+  expect(async () => {
+    await server.startServer();
+    server.closeServer();
+  }).not.toThrow(Error);
 });

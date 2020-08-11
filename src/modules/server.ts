@@ -60,7 +60,7 @@ class Server {
       }, { retries: 2, maxTimeout: 50, minTimeout: 50 });
     }
 
-    public close() {
+    public closeServer() {
       this.server.close();
     }
 }
