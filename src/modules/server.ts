@@ -3,7 +3,6 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import getPort from 'get-port';
 import asyncRetry from 'async-retry';
-// eslint-disable-next-line no-unused-vars
 import { Server as httpServer } from 'http';
 import hello from './handlers/hello';
 
@@ -21,11 +20,11 @@ class Server {
       this.router = new Router();
     }
 
-    public async getPort() {
+    public async getPort() : Promise<number> {
       return this.port;
     }
 
-    public async getApp() {
+    public async getApp() : Promise<Koa> {
       return this.app;
     }
 
