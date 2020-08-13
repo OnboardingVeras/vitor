@@ -36,7 +36,7 @@ class Server {
       this.router.get('/hello', hello);
     }
 
-    public async startServer() {
+    public async startServer() : Promise<httpServer | void> {
       await asyncRetry(async (bail) => {
         try {
           await this.setPort();
@@ -54,12 +54,12 @@ class Server {
         } catch (error) {
           console.debug(`Server failed to start on port:${this.port}. Reason: ${error.message}.`);
           if (error.code !== 'EADDRINUSE') return bail(error);
-          return error;
         }
+        return this.server;
       }, { retries: 2, maxTimeout: 50, minTimeout: 50 });
     }
 
-    public closeServer() {
+    public closeServer() : void {
       this.server.close();
     }
 }
