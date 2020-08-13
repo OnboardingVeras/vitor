@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
-async function hello(ctx) {
+import Koa from 'koa';
+
+async function hello(ctx: Koa.Context) : Promise<void> {
   try {
     ctx.body = {
       status: 'sucess',
