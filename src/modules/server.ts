@@ -5,6 +5,7 @@ import getPort from 'get-port';
 import asyncRetry from 'async-retry';
 import { Server as httpServer } from 'http';
 import hello from './handlers/hello';
+import info from './handlers/info';
 
 class Server {
     private app : Koa
@@ -34,6 +35,7 @@ class Server {
 
     private async setRoutes() {
       this.router.get('/hello', hello);
+      this.router.get('/info', info);
     }
 
     public async startServer() : Promise<httpServer | void> {
