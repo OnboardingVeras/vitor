@@ -13,7 +13,7 @@ test('test if server works', async () => {
 });
 
 it('test GET method in \'/hello\' endpoint', async () => {
-  server.startServer();
+  await server.startServer();
 
   const response = await request((await server.getApp()).callback()).get('/hello');
 
@@ -24,13 +24,13 @@ it('test GET method in \'/hello\' endpoint', async () => {
 });
 
 it('test GET method in \'/info\' endpoint', async () => {
-  server.startServer();
-  database.connect();
+  await server.startServer();
+  await database.connect();
 
   const response = await request((await server.getApp()).callback()).get('/info');
 
   expect(response.status).toBe(200);
 
   server.closeServer();
-  database.closeConnection();
+  await database.closeConnection();
 });

@@ -12,7 +12,7 @@ class Database {
       if (err) {
         console.error(err.message);
       } else {
-        console.log('Successfully connected to mongodb ');
+        console.log('Successfully connected to mongodb');
       }
     });
   }
