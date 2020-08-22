@@ -1,9 +1,7 @@
 import request from 'supertest';
 import Server from '../modules/server';
-import Database from '../modules/database/database';
 
 const server = new Server();
-const database = new Database();
 
 test('test if server works', async () => {
   expect(async () => {
@@ -25,12 +23,10 @@ it('test GET method in \'/hello\' endpoint', async () => {
 
 it('test GET method in \'/info\' endpoint', async () => {
   await server.startServer();
-  await database.connect();
 
   const response = await request((await server.getApp()).callback()).get('/info');
 
   expect(response.status).toBe(200);
 
   server.closeServer();
-  await database.closeConnection();
 });

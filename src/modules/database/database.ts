@@ -1,39 +1,45 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable no-useless-constructor */
 /* eslint-disable no-console */
 import mongoose from 'mongoose';
-import UsersSchema from './shcemas/Users';
 
 class Database {
+  private static instace: Database | null = null;
+
+  private mongodb = mongoose;
+
   private uri = 'mongodb://127.0.0.1:27017/local';
 
-  private Users = mongoose.model('Users', UsersSchema);
+  private constructor() {}
 
-  public async connect() : Promise<void> {
-    await mongoose.connect(this.uri, (err) => {
-      if (err) {
-        console.error(err.message);
-      } else {
-        console.log('Successfully connected to mongodb');
-      }
-    });
+  public static getInstance(): Database {
+    if (Database.instace === null) Database.instace = new Database();
+
+    return Database.instace;
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  public async connect(config = { useNewUrlParser: true, useUnifiedTopology: true }): Promise<void> {
+    await this.mongodb.connect(this.uri, config,
+      (err) => {
+        if (err) {
+          console.error(err.message);
+        } else {
+          console.log('Successfully connected to mongodb');
+        }
+      });
+  }
+
+  public db(): typeof mongoose {
+    return this.mongodb;
+  }
+
   public async dropDatabase() : Promise<void> {
-    await mongoose.connection.dropDatabase();
+    await this.mongodb.connection.dropDatabase();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public async closeConnection() : Promise<void> {
-    await mongoose.connection.close();
-  }
-
-  public async createUser(user: { name: string, age: number, bio: string}) : Promise<void> {
-    await this.Users.create(user);
-  }
-
-  public async getAllUsers(): Promise<mongoose.DocumentQuery<mongoose.Document[], mongoose.Document,
-                                      Record<string, unknown>>> {
-    return this.Users.find();
+    console.log('Disconnected to mongodb');
+    await this.mongodb.connection.close();
   }
 }
 
