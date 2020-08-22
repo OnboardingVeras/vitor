@@ -1,10 +1,25 @@
+import request from 'supertest';
+
+import Server from '../modules/server';
 import Database from '../modules/database/database';
+import Users from '../modules/database/models/Users';
 
-const database = new Database();
+const database = Database.getInstance();
+const server = new Server();
 
-test('test if db connection works', async () => {
-  expect(async () => {
-    await database.connect();
-    await database.closeConnection();
-  }).not.toThrow(Error);
+beforeAll(async () => {
+  await server.startServer();
+  await database.connect();
+});
+
+afterAll(async () => {
+  await database.dropDatabase();
+  await database.closeConnection();
+  await server.closeServer();
+});
+
+test('create Users', async () => {
+  await request((await server.getApp()).callback()).get('/info');
+  const user = await Users.findOne({ name: 'Vitor F Dullens' });
+  expect(user).toBeTruthy();
 });
