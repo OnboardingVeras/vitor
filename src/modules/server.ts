@@ -62,6 +62,7 @@ class Server {
     }
 
     public closeServer() : void {
+      console.log('Server closed');
       this.server.close();
     }
 }
