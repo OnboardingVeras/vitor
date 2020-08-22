@@ -1,9 +1,5 @@
 import Koa from 'koa';
-import Database from '../database/database';
 import Users from '../database/models/Users';
-
-const database = Database.getInstance();
-database.connect();
 
 async function createUsers() {
   await Users.create({
