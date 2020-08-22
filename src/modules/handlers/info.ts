@@ -1,13 +1,9 @@
 import Koa from 'koa';
 import Database from '../database/database';
-import UsersSchema from '../database/shcemas/Users';
+import Users from '../database/models/Users';
 
 const database = Database.getInstance();
 database.connect();
-
-const db = database.db();
-
-const Users = db.model('Users', UsersSchema);
 
 async function createUsers() {
   await Users.create({

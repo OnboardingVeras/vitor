@@ -18,7 +18,8 @@ class Database {
     return Database.instace;
   }
 
-  public async connect(config = { useNewUrlParser: true, useUnifiedTopology: true }): Promise<void> {
+  public async connect(config =
+  { useNewUrlParser: true, useUnifiedTopology: true }): Promise<void> {
     await this.mongodb.connect(this.uri, config,
       (err) => {
         if (err) {
