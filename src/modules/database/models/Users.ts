@@ -2,7 +2,7 @@ import Database from '../database';
 import UsersSchema from '../shcemas/Users';
 
 const database = Database.getInstance();
-const db = database.db();
+const db = database.mongodb;
 
 const Users = db.model('Users', UsersSchema);
 

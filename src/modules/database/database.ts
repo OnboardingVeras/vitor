@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 class Database {
   private static instace: Database | null = null;
 
-  private mongodb = mongoose;
+  public mongodb = mongoose;
 
   private uri = 'mongodb://127.0.0.1:27017/local';
 
@@ -28,10 +28,6 @@ class Database {
           console.log('Successfully connected to mongodb');
         }
       });
-  }
-
-  public db(): typeof mongoose {
-    return this.mongodb;
   }
 
   public async dropDatabase() : Promise<void> {
