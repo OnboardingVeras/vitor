@@ -1,9 +1,14 @@
+import mongoose from 'mongoose';
 import Database from '../database';
-import UsersSchema from '../shcemas/Users';
+
+const UsersSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  age: { type: Number, required: true },
+  bio: { type: String, required: true },
+});
 
 const database = Database.getInstance();
-const db = database.mongodb;
 
-const Users = db.model('Users', UsersSchema);
+const Users = database.createModel('Users', UsersSchema);
 
 export default Users;

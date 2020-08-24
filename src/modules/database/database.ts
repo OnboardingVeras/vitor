@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 class Database {
   private static instace: Database | null = null;
 
-  public mongodb = mongoose;
+  private mongodb = mongoose;
 
   private uri = 'mongodb://127.0.0.1:27017/local';
 
@@ -15,6 +15,11 @@ class Database {
     if (Database.instace === null) Database.instace = new Database();
 
     return Database.instace;
+  }
+
+  public createModel(name: string, schema : mongoose.Schema<unknown>) :
+   mongoose.Model<mongoose.Document, unknown> {
+    return this.mongodb.model(name, schema);
   }
 
   public async connect(config =
