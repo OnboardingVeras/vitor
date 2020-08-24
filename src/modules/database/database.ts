@@ -19,15 +19,12 @@ class Database {
 
   public async connect(config =
   { useNewUrlParser: true, useUnifiedTopology: true }): Promise<void> {
-    await this.mongodb.connect(this.uri, config,
-      (err) => {
-        if (err) {
-          console.error(err.message);
-          throw err;
-        } else {
-          console.log('Successfully connected to mongodb');
-        }
-      });
+    try {
+      await this.mongodb.connect(this.uri, config);
+      console.log('Successfully connected to mongodb');
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 
   public async dropDatabase() : Promise<void> {
