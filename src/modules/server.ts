@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Koa from 'koa';
 import Router from 'koa-router';
 import getPort from 'get-port';

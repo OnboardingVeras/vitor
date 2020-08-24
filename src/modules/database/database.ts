@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-useless-constructor */
-/* eslint-disable no-console */
 import mongoose from 'mongoose';
 
 class Database {
@@ -24,6 +23,7 @@ class Database {
       (err) => {
         if (err) {
           console.error(err.message);
+          throw err;
         } else {
           console.log('Successfully connected to mongodb');
         }
