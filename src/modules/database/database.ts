@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-useless-constructor */
 import mongoose from 'mongoose';
 
 class Database {
@@ -9,7 +7,10 @@ class Database {
 
   private uri = 'mongodb://127.0.0.1:27017/local';
 
-  private constructor() {}
+  private constructor() {
+    this.dropDatabase();
+    this.connect();
+  }
 
   public static getInstance(): Database {
     if (Database.instace === null) Database.instace = new Database();
@@ -17,12 +18,7 @@ class Database {
     return Database.instace;
   }
 
-  public createModel(name: string, schema : mongoose.Schema<unknown>) :
-   mongoose.Model<mongoose.Document, unknown> {
-    return this.mongodb.model(name, schema);
-  }
-
-  public async connect(config =
+  private async connect(config =
   { useNewUrlParser: true, useUnifiedTopology: true }): Promise<void> {
     try {
       await this.mongodb.connect(this.uri, config);
@@ -32,7 +28,7 @@ class Database {
     }
   }
 
-  public async dropDatabase() : Promise<void> {
+  private async dropDatabase() : Promise<void> {
     await this.mongodb.connection.dropDatabase();
   }
 
