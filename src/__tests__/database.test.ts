@@ -1,19 +1,21 @@
-import request from 'supertest';
-
-import Server from '../modules/server';
-import Database from '../modules/database/database';
 import Users from '../modules/database/models/Users';
+import Database from '../modules/database/database';
 
 const database = Database.getInstance();
-const server = new Server();
+
+afterEach(async () => {
+  await database.closeConnection();
+});
 
 test('create Users', async () => {
-  await server.startServer();
-  await database.connect({ useNewUrlParser: true, useUnifiedTopology: false });
-  await request((await server.getApp()).callback()).get('/info');
+  async function createUsers() {
+    await Users.create({
+      name: 'Vitor F Dullens',
+      age: 22,
+      bio: 'Estudante de Ciência da Computação',
+    });
+  }
+  await createUsers();
   const user = await Users.findOne({ name: 'Vitor F Dullens' });
   expect(user).toBeTruthy();
-  await database.dropDatabase();
-  await database.closeConnection();
-  server.closeServer();
 });
