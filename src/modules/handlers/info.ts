@@ -9,14 +9,11 @@ async function createUsers() {
   });
 }
 
-async function getAllUsers() {
-  return Users.find();
-}
-
-createUsers();
-
 async function info(ctx: Koa.Context) : Promise<void> {
-  ctx.body = await getAllUsers();
+  await createUsers();
+  ctx.body = {
+    users: await Users.find(),
+  };
 }
 
 export default info;

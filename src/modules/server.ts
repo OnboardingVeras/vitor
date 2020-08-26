@@ -65,9 +65,9 @@ class Server {
     }
 
     public async closeServer() : Promise<void> {
+      await this.database.closeConnection();
       console.log('Server closed');
       this.server.close();
-      await this.database.closeConnection();
     }
 }
 
