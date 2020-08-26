@@ -5,6 +5,7 @@ import asyncRetry from 'async-retry';
 import { Server as httpServer } from 'http';
 import hello from './handlers/hello';
 import info from './handlers/info';
+import Database from './database/database';
 
 class Server {
     private app : Koa
@@ -15,9 +16,12 @@ class Server {
 
     private server : httpServer
 
+    private database : Database
+
     constructor() {
       this.app = new Koa();
       this.router = new Router();
+      this.database = Database.getInstance();
     }
 
     public async getPort() : Promise<number> {
@@ -60,9 +64,10 @@ class Server {
       }, { retries: 2, maxTimeout: 50, minTimeout: 50 });
     }
 
-    public closeServer() : void {
+    public async closeServer() : Promise<void> {
       console.log('Server closed');
       this.server.close();
+      await this.database.closeConnection();
     }
 }
 
