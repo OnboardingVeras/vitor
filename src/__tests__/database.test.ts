@@ -1,10 +1,12 @@
 import Users from '../modules/database/models/Users';
 import Database from '../modules/database/database';
 
-const database = Database.getInstance();
+beforeAll(async () => {
+  await Database.getSingleton();
+});
 
 afterEach(async () => {
-  await database.closeConnection();
+  await Database.closeConnection();
 });
 
 test('create Users', async () => {

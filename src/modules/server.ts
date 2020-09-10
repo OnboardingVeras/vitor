@@ -16,12 +16,9 @@ class Server {
 
     private server : httpServer
 
-    private database : Database
-
     constructor() {
       this.app = new Koa();
       this.router = new Router();
-      this.database = Database.getInstance();
     }
 
     public async getPort() : Promise<number> {
@@ -46,6 +43,7 @@ class Server {
         try {
           await this.setPort();
           await this.setRoutes();
+          await Database.getSingleton();
 
           this.app.use(this.router.routes());
 
@@ -65,9 +63,13 @@ class Server {
     }
 
     public async closeServer() : Promise<void> {
-      await this.database.closeConnection();
-      console.log('Server closed');
-      this.server.close();
+      try {
+        await Database.closeConnection();
+        this.server.close();
+        console.log('Server closed');
+      } catch (error) {
+        console.error(error.message);
+      }
     }
 }
 

@@ -1,24 +1,24 @@
 import mongoose from 'mongoose';
 
 class Database {
-  private static instace: Database | null = null;
+  private static singleton: Database | null = null;
 
-  private mongodb = mongoose;
+  private static mongodb = mongoose;
 
-  private uri = 'mongodb://127.0.0.1:27017/local';
+  private static uri = 'mongodb://127.0.0.1:27017/local';
 
-  private constructor() {
-    this.dropDatabase();
-    this.connect();
+  private constructor() {}
+
+  public static async getSingleton(): Promise<Database> {
+    if (Database.singleton === null) { Database.singleton = new Database(); }
+
+    await this.connect();
+    await this.dropDatabase();
+
+    return Database.singleton;
   }
 
-  public static getInstance(): Database {
-    if (Database.instace === null) Database.instace = new Database();
-
-    return Database.instace;
-  }
-
-  private async connect(config =
+  private static async connect(config =
   { useNewUrlParser: true, useUnifiedTopology: true }): Promise<void> {
     try {
       await this.mongodb.connect(this.uri, config);
@@ -28,13 +28,21 @@ class Database {
     }
   }
 
-  private async dropDatabase() : Promise<void> {
-    await this.mongodb.connection.dropDatabase();
+  private static async dropDatabase() : Promise<void> {
+    try {
+      await this.mongodb.connection.dropDatabase();
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 
-  public async closeConnection() : Promise<void> {
-    console.log('Disconnected to mongodb');
-    await this.mongodb.connection.close();
+  public static async closeConnection() : Promise<void> {
+    try {
+      await this.mongodb.connection.close();
+      console.log('Disconnected to mongodb');
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 }
 

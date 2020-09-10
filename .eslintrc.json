@@ -31,6 +31,8 @@
             "ts": "never",
             "tsx": "never"
           }],
-        "no-console": "off"
+        "no-console": "off",
+        "no-useless-constructor": "off",
+        "@typescript-eslint/no-empty-function": "off"
     }
 }
