@@ -2,10 +2,10 @@ import Users from '../modules/database/models/Users';
 import Database from '../modules/database/database';
 
 beforeAll(async () => {
-  await Database.getSingleton();
+  await Database.setConnection();
 });
 
-afterEach(async () => {
+afterAll(async () => {
   await Database.closeConnection();
 });
 

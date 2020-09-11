@@ -1,21 +1,15 @@
 import mongoose from 'mongoose';
 
 class Database {
-  private static singleton: Database | null = null;
-
   private static mongodb = mongoose;
 
   private static uri = 'mongodb://127.0.0.1:27017/local';
 
   private constructor() {}
 
-  public static async getSingleton(): Promise<Database> {
-    if (Database.singleton === null) { Database.singleton = new Database(); }
-
+  public static async setConnection(): Promise<void> {
     await this.connect();
     await this.dropDatabase();
-
-    return Database.singleton;
   }
 
   private static async connect(config =

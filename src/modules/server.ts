@@ -43,7 +43,7 @@ class Server {
         try {
           await this.setPort();
           await this.setRoutes();
-          await Database.getSingleton();
+          await Database.setConnection();
 
           this.app.use(this.router.routes());
 
