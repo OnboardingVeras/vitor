@@ -1,10 +1,11 @@
-/* eslint-disable no-console */
 import Koa from 'koa';
 import Router from 'koa-router';
 import getPort from 'get-port';
 import asyncRetry from 'async-retry';
 import { Server as httpServer } from 'http';
 import hello from './handlers/hello';
+import info from './handlers/info';
+import Database from './database/database';
 
 class Server {
     private app : Koa
@@ -34,6 +35,7 @@ class Server {
 
     private async setRoutes() {
       this.router.get('/hello', hello);
+      this.router.get('/info', info);
     }
 
     public async startServer() : Promise<httpServer | void> {
@@ -41,6 +43,7 @@ class Server {
         try {
           await this.setPort();
           await this.setRoutes();
+          await Database.setConnection();
 
           this.app.use(this.router.routes());
 
@@ -59,8 +62,14 @@ class Server {
       }, { retries: 2, maxTimeout: 50, minTimeout: 50 });
     }
 
-    public closeServer() : void {
-      this.server.close();
+    public async closeServer() : Promise<void> {
+      try {
+        await Database.closeConnection();
+        this.server.close();
+        console.log('Server closed');
+      } catch (error) {
+        console.error(error.message);
+      }
     }
 }
 
