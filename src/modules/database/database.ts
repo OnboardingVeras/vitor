@@ -3,7 +3,11 @@ import mongoose from 'mongoose';
 class Database {
   private static mongodb = mongoose;
 
-  private static uri = 'mongodb://127.0.0.1:27017/local';
+  private static MONGO_HOST = process.env.MONGO_HOST || '127.0.0.1';
+
+  private static MONGO_PORT = process.env.MONGO_PORT || '27017';
+
+  private static uri = `mongodb://${Database.MONGO_HOST}:${Database.MONGO_PORT}/local`;
 
   private constructor() {}
 
@@ -16,7 +20,7 @@ class Database {
   { useNewUrlParser: true, useUnifiedTopology: true }): Promise<void> {
     try {
       await this.mongodb.connect(this.uri, config);
-      console.log('Successfully connected to mongodb');
+      console.log(`Successfully connected to mongodb on port: ${Database.MONGO_PORT} @ http://localhost:${Database.MONGO_PORT}`);
     } catch (error) {
       console.error(error.message);
     }
